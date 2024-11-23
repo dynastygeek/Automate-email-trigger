@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Form</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        h2 {
+            color: rgb(89, 176, 170);
+            text-align: center;
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center; /* Center horizontally */
+            padding: 20px;
+            margin: auto; /* Center the container */
+            max-width: 600px;
+            
+        }
+        form {
+            width: 50%;
+        }
+        input[type=text],
+        input[type=email],
+        input[type=date],
+        input[type=tel] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+        label {
+            text-align: right;
+            font-size: medium;
+        }
+        .submit-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .submit-container button {
+            padding: 10px 20px;
+            font-size: medium;
+            background-color: rgb(89, 176, 170);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .submit-container button:hover {
+            background-color: rgb(89, 176, 170);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color:rgb(89, 176, 170) ;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Employee On-Boarding Application</h2>
+<div class="form-container">
+    <form id="employeeForm" action="/submit-Onboarding" method="post">
+        <label for="firstname"><b>First Name</b></label>
+        <input type="text" id="firstname" name="firstname" required>
+        
+        <label for="lastname"><b>Last Name</b></label>
+        <input type="text" id="lastname" name="lastname" required>
+        
+        <label for="email"><b>Email</b></label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="department"><b>Department</b></label>
+        <input type="text" id="department" name="department" required>
+        
+        <label for="phonenumber"><b>Phone Number</b></label>
+        <input type="tel" id="phonenumber" name="phonenumber" required>
+        
+        <label for="position"><b>Position</b></label>
+        <input type="text" id="position" name="position" required>
+        
+        <label for="doj"><b>Date of Joining</b></label>
+        <input type="date" id="doj" name="doj" required>
+        
+        <label for="address1"><b>Address</b></label>
+        <input type="text" id="address1" name="address1" placeholder="Address line 1" required>
+        <input type="text" id="address2" name="address2" placeholder="Address line 2" required>
+        <input type="text" id="pincode" name="pincode" placeholder="Pincode" required>
+        
+        <label><b>Equipment Needed</b></label>
+        <input type="radio" id="yes" name="equipment" value="Yes" required>
+        <label for="yes">YES</label>
+        <input type="radio" id="no" name="equipment" value="No" required>
+        <label for="no">NO</label>
+
+        <div class="submit-container">
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+<h2 style="text-align: center;">Submitted Employee Data</h2>
+<table id="employeeTable">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Phone Number</th>
+            <th>Position</th>
+            <th>Date of Joining</th>
+            <th>Address</th>
+            <th>Equipment Needed</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data will be added here -->
+    </tbody>
+</table>
+
+<script>
+    const employeeForm = document.getElementById('employeeForm');
+    employeeForm.onsubmit = async function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        
+        const formData = new FormData(employeeForm);
+        const response = await fetch(employeeForm.action, {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        if (data.message === "successfully saved") {
+            const table = document.getElementById('employeeTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            newRow.insertCell(0).innerText = formData.get('firstname');
+            newRow.insertCell(1).innerText = formData.get('lastname');
+            newRow.insertCell(2).innerText = formData.get('email');
+            newRow.insertCell(3).innerText = formData.get('department');
+            newRow.insertCell(4).innerText = formData.get('phonenumber');
+            newRow.insertCell(5).innerText = formData.get('position');
+            newRow.insertCell(6).innerText = formData.get('doj');
+            newRow.insertCell(7).innerText = `${formData.get('address1')}, ${formData.get('address2')}`;
+            newRow.insertCell(8).innerText = formData.get('equipment');
+
+            employeeForm.reset(); // Clear the form
+        }
+    };
+</script>
+
+</body>
+</html>

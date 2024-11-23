@@ -1,0 +1,3 @@
+flask 
+json
+win32client.com
